@@ -1,24 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   zombieHorde.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 11:27:02 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 11:52:40 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include "Zombie.hpp"
 
-int main(int argc, char** argv)
+Zombie*	zombieHorde(int N, std::string name)
 {
-	if (argc != 2)
+	if (N <= 0)
 	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
+		return (NULL);
 	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
+	
+	Zombie *zombies = new Zombie[N];
+
+	if (zombies == NULL)
+	{
+		return (NULL);
+	}
+	for (int i = 0; i < N; i++)
+	{
+		zombies[i].setName(name);
+	}
+	return (zombies);
 }

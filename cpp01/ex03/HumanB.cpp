@@ -1,24 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   HumanB.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 12:51:25 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 13:00:02 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include "HumanB.hpp"
 
-int main(int argc, char** argv)
+HumanB::HumanB(std::string name)
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
+	this->_name = name;
+	this->_weapon = NULL;
+}
+
+void HumanB::attack()
+{
+	std::cout << this->_name << " attacks with their " << this->_weapon->getType() << std::endl;
+}
+
+void HumanB::setWeapon(Weapon& weapon)
+{
+	this->_weapon = &weapon;
+}
+
+HumanB::~HumanB()
+{
+	std::cout << "HumanB <" << this->_name << "> destroyed" << std::endl;
 }

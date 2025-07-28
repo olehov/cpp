@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   randomChump.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 11:08:16 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 11:21:43 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include "Zombie.hpp"
 
-int main(int argc, char** argv)
+void	randomChump(std::string name)
 {
-	if (argc != 2)
+	Zombie	*zombie = newZombie(name);
+	if (zombie == NULL)
 	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
+		return ;
 	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
+	zombie->announce();
+	delete zombie;
 }

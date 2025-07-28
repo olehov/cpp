@@ -5,20 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 11:36:12 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 11:36:51 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include "Zombie.hpp"
 
-int main(int argc, char** argv)
+int main()
 {
-	if (argc != 2)
+	int		count = 5;
+	Zombie*	horde = zombieHorde(count, "Zed");
+
+	if (horde)
 	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
+		for (int i = 0; i < count; ++i)
+		{
+			horde[i].announce();
+		}
+		delete[] horde;
 	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
+	return (0);
 }

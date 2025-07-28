@@ -1,24 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Weapon.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 12:13:24 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 12:45:03 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#ifndef __WEAPON__H__
+#define __WEAPON__H__
 
-int main(int argc, char** argv)
+#include <iostream>
+#include <string>
+
+class Weapon
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
-}
+private:
+	std::string	_type;
+public:
+	Weapon();
+	Weapon(std::string type);
+
+	void	setType(std::string type);
+	std::string	getType() const;
+
+	~Weapon();
+};
+
+#endif  //!__WEAPON__H__

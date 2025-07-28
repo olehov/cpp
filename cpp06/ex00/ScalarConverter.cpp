@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 11:46:12 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/23 17:19:53 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/07/28 15:30:49 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ ScalarConverter::ScalarConverter()
 
 ScalarConverter::ScalarConverter(const ScalarConverter& other)
 {
+	(void)other;
 	// copy constructor
 }
 
@@ -159,7 +160,6 @@ float ScalarConverter::toFloat(double val)
 
 double ScalarConverter::toDouble(const std::string &val)
 {
-	char	*end;
 	if (isDouble(val))
 	{
 		char	*end;
@@ -180,16 +180,42 @@ double ScalarConverter::toDouble(float val)
 
 static bool isCharLiteral(const std::string& s)
 {
-	size_t sLen = s.length();
-	if (sLen == 3 && s[0] == '\'' && s[2] == '\'')
+	const size_t literalsCount = 11;
+	const char escapes[] = { 'n', 't', 'r', 'b', 'f', 'v', 'a', '\\', '\'', '"', '?' };
+	switch (s.length())
 	{
-		return true;
-	}
-	if (sLen == 4 && s[0] == '\'' && s[1] == '\\' && s[3] == '\''
-		&& (s[2] == 'a' || s[2] == 'b' || s[2] == 'f' || s[2] == 'n' || s[2] == 'r' || s[2] == 't'
-			|| s[2] == 'v' || s[2] == '?' || s[2] == '\\' || (s[2] >= '0' && s[2] <= '7')))
-	{
-		return true;
+		case 1:
+			if (s[0] >= '0' && s[0] <= '9')
+			{
+				return false;
+			}
+			return true;
+		case 2:
+			for (size_t i = 0; i < literalsCount; i++)
+			{
+				if (s[1] == escapes[i] && s[0] == '\\')
+				{
+					return true;
+				}
+			}
+			break;
+		case 3:
+			if (s[0] == '\'' && s[2] == '\'')
+			{
+				return true;
+			}
+			break;			
+		case 4:
+			for (size_t i = 0; i < literalsCount; i++)
+			{
+				if (s[2] == escapes[i] && s[0] == '\'' && s[3] == '\'' && s[1] == '\\')
+				{
+					return true;
+				}
+			}
+			break;
+		default:
+			break;
 	}
 	return false;
 }
@@ -199,18 +225,97 @@ static char parseCharLiteral(const std::string& s)
 	const size_t literalsCount = 11;
 	const char escapes[] = { 'n', 't', 'r', 'b', 'f', 'v', 'a', '\\', '\'', '"', '?' };
 	const char values[]  = { '\n','\t','\r','\b','\f','\v','\a','\\', '\'', '\"','\?' };
-	if (s.length() == 3)
+	switch (s.length())
 	{
-		return s[1];
-	}
-	for (size_t i = 0; i < literalsCount; i++)
-	{
-		if (s[2] == escapes[i])
-		{
-			return values[i];
-		}
+		case 1:
+			return s[0];
+		case 2:
+			for (size_t i = 0; i < literalsCount; i++)
+			{
+				if (s[1] == escapes[i] && s[0] == '\\')
+				{
+					return values[i];
+				}
+			}
+			break;
+		case 3:
+			if (s[0] == '\'' && s[2] == '\'')
+			{
+				return s[1];
+			}
+			break;			
+		case 4:
+			for (size_t i = 0; i < literalsCount; i++)
+			{
+				if (s[2] == escapes[i] && s[0] == '\'' && s[3] == '\'' && s[1] == '\\')
+				{
+					return values[i];
+				}
+			}
+			break;
+		default:
+			break;
 	}
 	throw std::invalid_argument("Invalid or unsupported Character literal");
+}
+
+static void printChar(char cVal, bool is_char)
+{
+	std::cout << "char: ";
+	if (is_char)
+	{
+		if (isprint(cVal))
+		{
+			std::cout << cVal << std::endl;
+		}
+		else
+		{
+			std::cout << "Non displayable" << std::endl;
+		}
+	}
+	else
+	{
+		std::cout << "impossible" << std::endl;
+	}
+}
+
+static void printInt(int iVal, bool is_int)
+{
+	std::cout << "int: ";
+	if (is_int)
+	{
+		std::cout << iVal << std::endl;
+	}
+	else
+	{
+		std::cout << "impossible" << std::endl;
+	}
+}
+
+static void printFloat(float fVal, bool is_float)
+{
+	std::cout << "float: ";
+	if (is_float)
+	{
+		std::cout << std::fixed << std::setprecision(1) << fVal << "f" << std::endl;
+	}
+	else
+	{
+		std::cout << "impossible" << std::endl;
+	}
+}
+
+static void printDouble(double dVal, bool is_double)
+{
+	std::cout << "double: ";
+	if (is_double)
+	{
+		std::cout << std::fixed << std::setprecision(1) << dVal << std::endl;
+	}
+	else
+	{
+		std::cout << "impossible" << std::endl;
+	}
 }
 
 void ScalarConverter::convert(const std::string &literal)
@@ -298,6 +403,10 @@ void ScalarConverter::convert(const std::string &literal)
 		std::cerr << "Incorrect literal format" << std::endl;
 		return ;
 	}
+	printChar(cVal, is_char);
+	printInt(iVal, is_int);
+	printFloat(fVal, is_float);
+	printDouble(dVal, is_double);
 }
 
 ScalarConverter::~ScalarConverter()

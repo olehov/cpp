@@ -1,24 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   ScavTrap.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/07/02 13:43:19 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/07/02 15:27:08 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#ifndef __SCAVTRAP__H__
+#define __SCAVTRAP__H__
 
-int main(int argc, char** argv)
+#include "ClapTrap.hpp"
+#include <iostream>
+#include <string>
+
+class ScavTrap: virtual public ClapTrap
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
-}
+public:
+	ScavTrap();
+	ScavTrap(std::string name);
+	ScavTrap(const ScavTrap& other);
+
+	ScavTrap& operator=(const ScavTrap& other);
+	
+	void attack(const std::string& target);
+	void guardGate();
+
+	~ScavTrap();
+};
+
+#endif  //!__SCAVTRAP__H__

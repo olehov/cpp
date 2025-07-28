@@ -1,24 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   HumanA.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 12:33:43 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 12:45:08 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#ifndef __HUMANA__H__
+#define __HUMANA__H__
 
-int main(int argc, char** argv)
+#include <iostream>
+#include <string>
+#include "Weapon.hpp"
+
+class HumanA
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
-}
+private:
+	std::string	_name;
+	Weapon&		_weapon;
+public:
+	HumanA(std::string name, Weapon& weapon);
+	
+	void	attack();
+	
+	~HumanA();
+};
+
+#endif  //!__HUMANA__H__

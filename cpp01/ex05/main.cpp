@@ -5,20 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 14:54:30 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 15:30:12 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include <iostream>
+#include "Harl.hpp"
 
-int main(int argc, char** argv)
+int main (void)
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
+	Harl harl;
+
+	std::cout << std::endl << "------ DEBUG Level ------" << std::endl;
+	harl.complain("DEBUG");
+	std::cout << std::endl << "------ INFO Level ------" << std::endl;;
+	harl.complain("INFO");
+	std::cout << std::endl << "------ WARNING Level ------" << std::endl;
+	harl.complain("WARNING");
+	std::cout << std::endl << "------ ERROR Level ------" << std::endl;
+	harl.complain("ERROR");
+	std::cout << std::endl << "------ No valid Level ------" << std::endl;
+	harl.complain("ALARM");
+	return (0);
 }

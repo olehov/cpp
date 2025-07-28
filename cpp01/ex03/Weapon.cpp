@@ -1,24 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Weapon.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 12:15:24 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 12:45:01 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include "Weapon.hpp"
 
-int main(int argc, char** argv)
+Weapon::Weapon()
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
+	this->_type = "";
+}
+
+Weapon::Weapon(std::string type)
+{
+	this->_type = type;
+}
+
+void Weapon::setType(std::string type)
+{
+	this->_type = type;
+}
+
+std::string Weapon::getType() const
+{
+	return (this->_type);
+}
+
+Weapon::~Weapon()
+{
+	std::cout << "weapot type <" << this->_type << "> destroyed" << std::endl;
 }

@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   HumanA.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 12:28:38 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 12:59:59 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include "HumanA.hpp"
 
-int main(int argc, char** argv)
+HumanA::HumanA(std::string name, Weapon& weapon) : _weapon(weapon)
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
+	this->_name = name;
+}
+
+void HumanA::attack()
+{
+	std::cout << this->_name << " attacks with their " << this->_weapon.getType() << std::endl;
+}
+
+HumanA::~HumanA()
+{
+	std::cout << "HumanA <" << this->_name << "> destroyed" << std::endl;
 }

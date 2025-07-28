@@ -1,24 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Zombie.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/13 11:01:22 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/13 11:39:07 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#ifndef ZOMBIE_HPP
+#define ZOMBIE_HPP
 
-int main(int argc, char** argv)
+#include <iostream>
+#include <string>
+
+class Zombie
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
-}
+private:
+	std::string	_name;
+public:
+	Zombie();
+	Zombie(std::string name);
+
+	void	announce();
+
+	~Zombie();
+};
+
+void randomChump(std::string name);
+
+Zombie* newZombie(std::string name);
+
+#endif // ZOMBIE_HPP

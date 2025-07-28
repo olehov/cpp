@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Dog.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/07/03 11:13:33 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/07/03 15:44:50 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#ifndef __Dog__H__
+#define __Dog__H__
 
-int main(int argc, char** argv)
+#include <iostream>
+#include "Animal.hpp"
+
+class Dog: public Animal
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
-}
+public:
+	Dog();
+	Dog(const Dog& other);
+
+	Dog& operator=(const Dog& other);
+
+	virtual void makeSound() const;
+
+	~Dog();
+};
+
+#endif  //!__Dog__H__

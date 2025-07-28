@@ -1,24 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   PhoneBook.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/05/08 10:48:23 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/05/09 14:24:25 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#include <iostream>
+#include "Contact.hpp"
 
-int main(int argc, char** argv)
+class PhoneBook
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
-}
+private:
+	const static int	maxContactsSize = 8;
+	int	index;
+	int	contactsCount;
+	Contact	contacts[maxContactsSize];
+
+public:
+	PhoneBook();
+	void	printAllContacts();
+	Contact	getContactById(int id);
+	void	addContact(Contact contact);
+	~PhoneBook();
+
+private:
+	void	printSingleContact(Contact contact);
+};

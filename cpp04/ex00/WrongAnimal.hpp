@@ -1,24 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   WrongAnimal.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/07/03 10:54:59 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/07/11 12:08:45 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#ifndef __WrongAnimal__H__
+#define __WrongAnimal__H__
 
-int main(int argc, char** argv)
+#include <iostream>
+#include <string>
+
+class WrongAnimal
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
-}
+protected:
+	std::string type;
+public:
+	WrongAnimal();
+	WrongAnimal(const WrongAnimal& other);
+
+	WrongAnimal& operator=(const WrongAnimal& other);
+
+	const std::string& getType() const;
+
+	void makeSound() const;
+
+	~WrongAnimal();
+};
+
+#endif  //!__WrongAnimal__H__

@@ -1,24 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   FragTrap.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:11:05 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/28 12:24:50 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/07/02 14:36:36 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/07/02 15:32:01 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ScalarConverter.hpp"
+#ifndef __FRAGTRAP__H__
+#define __FRAGTRAP__H__
 
-int main(int argc, char** argv)
+#include "ClapTrap.hpp"
+#include <iostream>
+#include <string>
+
+class FragTrap: virtual public ClapTrap
 {
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./convert <literal>" << std::endl;
-		return 1;
-	}
-	ScalarConverter::convert(argv[1]);
-	return 0;
-}
+public:
+	FragTrap();
+	FragTrap(std::string name);
+	FragTrap(const FragTrap& other);
+
+	FragTrap& operator=(const FragTrap& other);
+
+	void highFivesGuys(void);
+
+	~FragTrap();
+};
+
+#endif  //!__FRAGTRAP__H__

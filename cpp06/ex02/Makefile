@@ -6,14 +6,14 @@
 #    By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/07 12:38:47 by ogrativ           #+#    #+#              #
-#    Updated: 2025/07/28 16:36:11 by ogrativ          ###   ########.fr        #
+#    Updated: 2025/07/29 11:33:51 by ogrativ          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = Data.cpp Serializer.cpp main.cpp
+SRCS = A.cpp B.cpp C.cpp Base.cpp main.cpp
 BUILD_DIR = build
 OBJS = $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
-NAME = serealizer
+NAME = base
 GPP = g++
 RM = rm -f
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98

@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Base.hpp                                           :+:      :+:    :+:   */
+/*   C.hpp                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/28 16:43:53 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/29 11:33:18 by ogrativ          ###   ########.fr       */
+/*   Created: 2025/07/29 11:07:24 by ogrativ           #+#    #+#             */
+/*   Updated: 2025/07/29 11:08:16 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BASE_HPP
-#define BASE_HPP
+#ifndef C_HPP
+#define C_HPP
 
+#include "Base.hpp"
 
-#include <iostream>
-
-class Base
+class C: public Base
 {
-	public:
-	virtual ~Base();
+public:
+	C();
+	~C();
 };
 
-#endif  //!BASE_HPP
+#endif  //!C_HPP

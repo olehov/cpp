@@ -7,16 +7,17 @@ BitcoinExchange::BitcoinExchange() {}
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &other) : _rates(other._rates) {}
 
 BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other) {
-    if (this != &other)
+    if (this != &other) {
         _rates = other._rates;
+    }
     return *this;
 }
 
 void BitcoinExchange::loadDatabase(const std::string &filename) {
     std::ifstream file(filename.c_str());
-    if (!file.is_open())
+    if (!file.is_open()){
         throw std::runtime_error("Error: could not open database file.");
-
+    }
     std::string line;
 
     // skip header
@@ -38,17 +39,18 @@ void BitcoinExchange::loadDatabase(const std::string &filename) {
 
 void BitcoinExchange::processInput(const std::string &filename) {
     std::ifstream file(filename.c_str());
-    if (!file.is_open())
+    if (!file.is_open()){
         throw std::runtime_error("Error: could not open file.");
-
+    }
     std::string line;
 
     // skip header
     std::getline(file, line);
 
     while (std::getline(file, line)) {
-        if (line.empty())
+        if (line.empty()) {
             continue;
+        }
 
         std::string date;
         double value;
@@ -88,20 +90,27 @@ bool BitcoinExchange::isValidDate(const std::string &date) const {
 
     std::istringstream ss(date);
 
-    if (!(ss >> year >> dash1 >> month >> dash2 >> day))
+    if (!(ss >> year >> dash1 >> month >> dash2 >> day)) {
         return false;
+    }
 
-    if (dash1 != '-' || dash2 != '-')
+    if (dash1 != '-' || dash2 != '-') {
         return false;
+    }
 
     ss >> std::ws;
-    if (!ss.eof())
+    if (!ss.eof()) {
         return false;
+    }
 
-    if (month < 1 || month > 12)
+    if (month < 1 || month > 12) {
         return false;
+    }
 
-    bool isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    bool isLeap = false;
+    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+        isLeap = true;
+    }
 
     int maxDays;
 
@@ -131,8 +140,9 @@ bool BitcoinExchange::isValidDate(const std::string &date) const {
         return false;
     }
 
-    if (day < 1 || day > maxDays)
+    if (day < 1 || day > maxDays) {
         return false;
+    }
 
     return true;
 }
@@ -183,9 +193,8 @@ void BitcoinExchange::parseLine(const std::string &line, const std::string &deli
                                             : "Error: bad input => " + line);
     }
 
-    if (isDatabase) {
-        if (value < 0)
-            throw std::runtime_error("Error: invalid exchange rate in database.");
+    if (isDatabase && value < 0) {
+        throw std::runtime_error("Error: invalid exchange rate in database.");
     }
 }
 

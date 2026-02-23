@@ -40,9 +40,6 @@ int main(int argc, char **argv) {
 
     PmergeMe pm(const_cast<const char **>(argv + 1));
 
-    // BEFORE
-    printBefore(argv + 1);
-
     // VECTOR
     if (!pm.sortVector()) {
         std::cerr << "Error" << std::endl;
@@ -54,6 +51,9 @@ int main(int argc, char **argv) {
         std::cerr << "Error" << std::endl;
         return 1;
     }
+
+    // BEFORE
+    printBefore(argv + 1);
 
     // AFTER (vector is sorted)
     printAfter(pm.getDeque());

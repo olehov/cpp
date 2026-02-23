@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 15:32:22 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/07/30 16:39:50 by ogrativ          ###   ########.fr       */
+/*   Updated: 2026/02/20 16:13:51 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Span::Span(unsigned int N)
 	_len = 0;
 }
 
-Span::Span(const Span& other)
+Span::Span(const Span &other)
 {
 	_numbers = new int[other._size];
 	_size = other._size;
@@ -34,7 +34,7 @@ Span::Span(const Span& other)
 	}
 }
 
-Span& Span::operator=(const Span& other)
+Span &Span::operator=(const Span &other)
 {
 	if (this != &other)
 	{
@@ -90,7 +90,7 @@ int Span::longestSpan()
 	}
 
 	int minVal = _numbers[0];
-	int maxVal =_numbers[0];
+	int maxVal = _numbers[0];
 
 	for (unsigned int i = 0; i < _len; i++)
 	{
@@ -103,7 +103,7 @@ int Span::longestSpan()
 			maxVal = _numbers[i];
 		}
 	}
-	
+
 	return maxVal - minVal;
 }
 

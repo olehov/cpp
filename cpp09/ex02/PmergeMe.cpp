@@ -1,44 +1,46 @@
 #include "PmergeMe.hpp"
 #include <ctime>
 
-PmergeMe::PmergeMe() : _av(NULL), _vectorTime(0), _dequeTime(0) {}
+PmergeMe::PmergeMe() : av_(NULL), vectorTime_(0), dequeTime_(0) {}
 
-PmergeMe::PmergeMe(const char **av) : _av(av), _vectorTime(0), _dequeTime(0) {}
+PmergeMe::PmergeMe(char **av) : av_(av), vectorTime_(0), dequeTime_(0) {}
 
 PmergeMe::PmergeMe(const PmergeMe &other)
-    : _av(other._av),
-      _vec(other._vec),
-      _vectorTime(other._vectorTime),
-      _deq(other._deq),
-      _dequeTime(other._dequeTime) {}
+    : av_(other.av_),
+      vec_(other.vec_),
+      vectorTime_(other.vectorTime_),
+      deq_(other.deq_),
+      dequeTime_(other.dequeTime_) {}
 
 PmergeMe &PmergeMe::operator=(const PmergeMe &other) {
     if (this != &other) {
-        _av = other._av;
-        _vec = other._vec;
-        _deq = other._deq;
+        av_ = other.av_;
+        vec_ = other.vec_;
+        deq_ = other.deq_;
+        vectorTime_ = other.vectorTime_;
+        dequeTime_ = other.dequeTime_;
     }
     return *this;
 }
 
-const std::vector<int> &PmergeMe::getVector() const { return _vec; }
-const std::deque<int> &PmergeMe::getDeque() const { return _deq; }
-double PmergeMe::getVectorTime() const { return _vectorTime; }
-double PmergeMe::getDequeTime() const { return _dequeTime; }
+const std::vector<int> &PmergeMe::getVector() const { return vec_; }
+const std::deque<int> &PmergeMe::getDeque() const { return deq_; }
+double PmergeMe::getVectorTime() const { return vectorTime_; }
+double PmergeMe::getDequeTime() const { return dequeTime_; }
 
 bool PmergeMe::sortVector() {
-    if (_av == NULL)
+    if (av_ == NULL)
         return false;
 
     try {
         const clock_t start = clock();
 
-        parseInput(_vec);        // data management
-        fordJohnsonVector(_vec); // sorting
+        parseInput(vec_);        // data management
+        fordJohnsonVector(vec_); // sorting
 
         const clock_t end = clock();
 
-        _vectorTime = static_cast<double>(end - start) * 1000000.0 / CLOCKS_PER_SEC;
+        vectorTime_ = static_cast<double>(end - start) * 1000000.0 / CLOCKS_PER_SEC;
     } catch (const std::exception &) {
         return false;
     }
@@ -47,18 +49,18 @@ bool PmergeMe::sortVector() {
 }
 
 bool PmergeMe::sortDeque() {
-    if (_av == NULL)
+    if (av_ == NULL)
         return false;
 
     try {
         const clock_t start = clock();
 
-        parseInput(_deq);       // data management
-        fordJohnsonDeque(_deq); // sorting
+        parseInput(deq_);       // data management
+        fordJohnsonDeque(deq_); // sorting
 
         const clock_t end = clock();
 
-        _dequeTime = static_cast<double>(end - start) * 1000000.0 / CLOCKS_PER_SEC;
+        dequeTime_ = static_cast<double>(end - start) * 1000000.0 / CLOCKS_PER_SEC;
     } catch (const std::exception &) {
         return false;
     }

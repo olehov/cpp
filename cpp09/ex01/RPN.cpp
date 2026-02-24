@@ -48,12 +48,12 @@ static std::string getWord(const std::string &s, size_t &pos) {
 
     std::string res = "";
 
-    while (pos < s.size() && isspace(s[pos])) {
+    while (pos < s.size() && isspace(static_cast<unsigned char>(s[pos]))) {
         pos++;
     }
 
     for (; pos < s.size(); pos++) {
-        if (isspace(s[pos])) {
+        if (isspace(static_cast<unsigned char>(s[pos]))) {
             return res;
         }
         res.push_back(s[pos]);
@@ -77,6 +77,10 @@ RPN &RPN::operator=(const RPN &other) {
 }
 
 bool RPN::run() {
+    while (!stack_.empty()) {
+        stack_.pop();
+    }
+
     for (size_t i = 0; i < input_.size();) {
         std::string tmp = getWord(input_, i);
         if (tmp.size() > 1) {

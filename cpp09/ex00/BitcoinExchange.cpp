@@ -27,11 +27,7 @@ void BitcoinExchange::loadDatabase(const std::string &filename) {
         std::string date;
         double value;
 
-        try {
-            parseLine(line, ",", date, value, true);
-        } catch (const std::exception &e) {
-            throw std::runtime_error(e.what());
-        }
+        parseLine(line, ",", date, value, true);
 
         _rates[date] = value;
     }
@@ -175,11 +171,20 @@ void BitcoinExchange::parseLine(const std::string &line, const std::string &deli
 
     if (pos == std::string::npos || pos == 0 || pos + delimiter.length() >= line.length()) {
         throw std::runtime_error(isDatabase ? "Error: bad database file."
-                                            : "Error: bad input => " + line);
+                                            : "Error: bad input => " + (line.find_last_not_of(" \t") == std::string::npos ? "empty line" : line));
     }
 
     date = line.substr(0, pos);
     std::string valueStr = line.substr(pos + delimiter.length());
+
+    size_t start = date.find_first_not_of(" \t");
+    size_t end = date.find_last_not_of(" \t");
+    if (start == std::string::npos) {
+        date.clear();
+    }
+    else {
+        date = date.substr(start, end - start + 1);
+    }
 
     if (!isValidDate(date)) {
         throw std::runtime_error(isDatabase ? "Error: invalid date in database."

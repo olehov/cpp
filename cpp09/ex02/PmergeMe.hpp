@@ -26,7 +26,7 @@ template <typename T> T fromString(const std::string &str) {
 class PmergeMe {
 public:
     PmergeMe();
-    PmergeMe(const char **av);
+    PmergeMe(char **av);
     PmergeMe(const PmergeMe &other);
     PmergeMe &operator=(const PmergeMe &other);
     
@@ -41,16 +41,16 @@ public:
     ~PmergeMe();
 
 private:
-    const char **_av;
-    std::vector<int> _vec;
-    double _vectorTime;
-    std::deque<int> _deq;
-    double _dequeTime;
+    char **av_;
+    std::vector<int> vec_;
+    double vectorTime_;
+    std::deque<int> deq_;
+    double dequeTime_;
 
     template <typename Container> void parseInput(Container &c) {
         c.clear();
-        for (size_t i = 0; _av[i]; i++) {
-            int val = fromString<int>(_av[i]);
+        for (size_t i = 0; av_[i]; i++) {
+            int val = fromString<int>(av_[i]);
             if (val <= 0)
                 throw std::invalid_argument("invalid input");
             c.push_back(val);

@@ -68,11 +68,51 @@ bool PmergeMe::sortDeque() {
     return true;
 }
 
-static void binaryInsertVector(std::vector<int> &v, int value) {
-    std::vector<int>::iterator left = v.begin();
-    std::vector<int>::iterator right = v.end();
+static std::vector<size_t> buildInsertionOrder(size_t n)
+{
+    std::vector<size_t> order;
+    if (n == 0)
+        return order;
 
-    while (left < right) {
+    std::vector<size_t> jacob;
+    jacob.push_back(1);
+
+    size_t j1 = 1;
+    size_t j2 = 0;
+
+    while (true) {
+        size_t next = j1 + 2 * j2;
+        if (next > n)
+            break;
+        jacob.push_back(next);
+        j2 = j1;
+        j1 = next;
+    }
+
+    size_t prev = 0;
+    for (size_t k = 0; k < jacob.size(); ++k) {
+        size_t curr = jacob[k];
+        for (size_t i = curr; i > prev; --i)
+            order.push_back(i - 1);
+        prev = curr;
+    }
+
+    for (size_t i = n; i > prev; --i)
+        order.push_back(i - 1);
+
+    return order;
+}
+
+static void binaryInsertVector(
+    std::vector<int> &v,
+    int value,
+    std::vector<int>::iterator endIt)
+{
+    std::vector<int>::iterator left = v.begin();
+    std::vector<int>::iterator right = endIt;
+
+    while (left < right)
+    {
         std::vector<int>::iterator mid = left + (right - left) / 2;
         if (*mid < value)
             left = mid + 1;
@@ -82,12 +122,37 @@ static void binaryInsertVector(std::vector<int> &v, int value) {
     v.insert(left, value);
 }
 
+static void jacobsthalInsertVector(
+    std::vector<int> &mainChain,
+    const std::vector< std::pair<int,int> > &pairs,
+    int rest,
+    bool hasRest)
+{
+    std::vector<size_t> order = buildInsertionOrder(pairs.size());
+
+    for (size_t i = 0; i < order.size(); ++i)
+    {
+        size_t idx = order[i];
+
+        int a = pairs[idx].first;
+        int b = pairs[idx].second;
+
+        std::vector<int>::iterator posB =
+            std::lower_bound(mainChain.begin(), mainChain.end(), b);
+
+        binaryInsertVector(mainChain, a, posB);
+    }
+
+    if (hasRest)
+        binaryInsertVector(mainChain, rest, mainChain.end());
+}
+
 void PmergeMe::fordJohnsonVector(std::vector<int> &v) {
     if (v.size() <= 1)
         return;
 
     std::vector< std::pair<int, int> > pairs;
-    int rest = -1;
+    int rest = 0;
     bool hasRest = false;
 
     // Pairing
@@ -113,29 +178,52 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &v) {
     // Recursive sort
     fordJohnsonVector(mainChain);
 
-    // Insert smaller elements
-    for (size_t i = 0; i < pairs.size(); i++)
-        binaryInsertVector(mainChain, pairs[i].first);
-
-    // Insert leftover element
-    if (hasRest)
-        binaryInsertVector(mainChain, rest);
+    jacobsthalInsertVector(mainChain, pairs, rest, hasRest);
 
     v = mainChain;
 }
+static void binaryInsertDeque(
+    std::deque<int> &v,
+    int value,
+    std::deque<int>::iterator endIt)
+{
+    std::deque<int>::iterator left = v.begin();
+    std::deque<int>::iterator right = endIt;
 
-static void binaryInsertDeque(std::deque<int> &d, int value) {
-    std::deque<int>::iterator left = d.begin();
-    std::deque<int>::iterator right = d.end();
-
-    while (left < right) {
+    while (left < right)
+    {
         std::deque<int>::iterator mid = left + (right - left) / 2;
         if (*mid < value)
             left = mid + 1;
         else
             right = mid;
     }
-    d.insert(left, value);
+    v.insert(left, value);
+}
+
+static void jacobsthalInsertDeque(
+    std::deque<int> &mainChain,
+    const std::deque< std::pair<int,int> > &pairs,
+    int rest,
+    bool hasRest)
+{
+    std::vector<size_t> order = buildInsertionOrder(pairs.size());
+
+    for (size_t i = 0; i < order.size(); ++i)
+    {
+        size_t idx = order[i];
+
+        int a = pairs[idx].first;
+        int b = pairs[idx].second;
+
+        std::deque<int>::iterator posB =
+            std::lower_bound(mainChain.begin(), mainChain.end(), b);
+
+        binaryInsertDeque(mainChain, a, posB);
+    }
+
+    if (hasRest)
+        binaryInsertDeque(mainChain, rest, mainChain.end());
 }
 
 void PmergeMe::fordJohnsonDeque(std::deque<int> &d) {
@@ -143,7 +231,7 @@ void PmergeMe::fordJohnsonDeque(std::deque<int> &d) {
         return;
 
     std::deque< std::pair<int, int> > pairs;
-    int rest = -1;
+    int rest = 0;
     bool hasRest = false;
 
     // Pairing
@@ -169,13 +257,7 @@ void PmergeMe::fordJohnsonDeque(std::deque<int> &d) {
     // Recursive sort
     fordJohnsonDeque(mainChain);
 
-    // Insert smaller elements
-    for (size_t i = 0; i < pairs.size(); i++)
-        binaryInsertDeque(mainChain, pairs[i].first);
-
-    // Insert leftover element
-    if (hasRest)
-        binaryInsertDeque(mainChain, rest);
+    jacobsthalInsertDeque(mainChain, pairs, rest, hasRest);
 
     d = mainChain;
 }

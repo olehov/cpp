@@ -1,5 +1,10 @@
 #include "PmergeMe.hpp"
 #include <ctime>
+#include <algorithm>
+
+/*
+ * Constructors / Canonical form
+ */
 
 PmergeMe::PmergeMe() : av_(NULL), vectorTime_(0), dequeTime_(0) {}
 
@@ -23,10 +28,21 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &other) {
     return *this;
 }
 
+/*
+ * Getters
+ */
+
 const std::vector<int> &PmergeMe::getVector() const { return vec_; }
 const std::deque<int> &PmergeMe::getDeque() const { return deq_; }
 double PmergeMe::getVectorTime() const { return vectorTime_; }
 double PmergeMe::getDequeTime() const { return dequeTime_; }
+
+/*
+ * sortVector / sortDeque
+ * Measures total time of:
+ *   - parsing input
+ *   - Ford-Johnson sorting
+ */
 
 bool PmergeMe::sortVector() {
     if (av_ == NULL)
@@ -35,11 +51,12 @@ bool PmergeMe::sortVector() {
     try {
         const clock_t start = clock();
 
-        parseInput(vec_);        // data management
-        fordJohnsonVector(vec_); // sorting
+        parseInput(vec_);        // Data validation + conversion
+        fordJohnsonVector(vec_); // Ford-Johnson sorting (vector)
 
         const clock_t end = clock();
 
+        // Total processing time in microseconds
         vectorTime_ = static_cast<double>(end - start) * 1000000.0 / CLOCKS_PER_SEC;
     } catch (const std::exception &) {
         return false;
@@ -55,11 +72,12 @@ bool PmergeMe::sortDeque() {
     try {
         const clock_t start = clock();
 
-        parseInput(deq_);       // data management
-        fordJohnsonDeque(deq_); // sorting
+        parseInput(deq_);        // Data validation + conversion
+        fordJohnsonDeque(deq_);  // Ford-Johnson sorting (deque)
 
         const clock_t end = clock();
 
+        // Total processing time in microseconds
         dequeTime_ = static_cast<double>(end - start) * 1000000.0 / CLOCKS_PER_SEC;
     } catch (const std::exception &) {
         return false;
@@ -67,6 +85,17 @@ bool PmergeMe::sortDeque() {
 
     return true;
 }
+
+/*
+ * Builds Jacobsthal-based insertion order.
+ * This order minimizes comparisons during insertion phase.
+ *
+ * Jacobsthal recurrence:
+ *   J(n) = J(n-1) + 2 * J(n-2)
+ *
+ * The sequence defines optimal insertion blocks
+ * in the Ford-Johnson algorithm.
+ */
 
 static std::vector<size_t> buildInsertionOrder(size_t n)
 {
@@ -80,6 +109,7 @@ static std::vector<size_t> buildInsertionOrder(size_t n)
     size_t j1 = 1;
     size_t j2 = 0;
 
+    // Generate Jacobsthal numbers up to n
     while (true) {
         size_t next = j1 + 2 * j2;
         if (next > n)
@@ -89,6 +119,7 @@ static std::vector<size_t> buildInsertionOrder(size_t n)
         j1 = next;
     }
 
+    // Convert Jacobsthal values into insertion indices
     size_t prev = 0;
     for (size_t k = 0; k < jacob.size(); ++k) {
         size_t curr = jacob[k];
@@ -97,11 +128,17 @@ static std::vector<size_t> buildInsertionOrder(size_t n)
         prev = curr;
     }
 
+    // Insert any remaining indices
     for (size_t i = n; i > prev; --i)
         order.push_back(i - 1);
 
     return order;
 }
+
+/*
+ * Binary insertion inside restricted range [begin, endIt).
+ * The search range is limited to reduce comparisons.
+ */
 
 static void binaryInsertVector(
     std::vector<int> &v,
@@ -122,6 +159,16 @@ static void binaryInsertVector(
     v.insert(left, value);
 }
 
+/*
+ * Inserts all smaller elements (a_i) into sorted main chain (b_i).
+ *
+ * Each a_i satisfies:
+ *     a_i ≤ b_i
+ *
+ * Therefore insertion only needs to search in the prefix
+ * ending at b_i, reducing the number of comparisons.
+ */
+
 static void jacobsthalInsertVector(
     std::vector<int> &mainChain,
     const std::vector< std::pair<int,int> > &pairs,
@@ -137,15 +184,29 @@ static void jacobsthalInsertVector(
         int a = pairs[idx].first;
         int b = pairs[idx].second;
 
+        // Locate paired b_i inside sorted main chain
         std::vector<int>::iterator posB =
             std::lower_bound(mainChain.begin(), mainChain.end(), b);
 
         binaryInsertVector(mainChain, a, posB);
     }
 
+    // Insert leftover element if original size was odd
     if (hasRest)
         binaryInsertVector(mainChain, rest, mainChain.end());
 }
+
+/*
+ * Ford-Johnson (Merge-Insert) algorithm for std::vector.
+ *
+ * Algorithm structure:
+ * 1. Pair adjacent elements (a_i ≤ b_i)
+ * 2. Recursively sort larger elements (b_i)
+ * 3. Insert smaller elements (a_i) using Jacobsthal order
+ *
+ * This reduces the number of comparisons compared to
+ * classical merge sort in worst-case comparison count.
+ */
 
 void PmergeMe::fordJohnsonVector(std::vector<int> &v) {
     if (v.size() <= 1)
@@ -155,7 +216,7 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &v) {
     int rest = 0;
     bool hasRest = false;
 
-    // Pairing
+    // Step 1: Pair adjacent elements and order internally
     for (size_t i = 0; i + 1 < v.size(); i += 2) {
         int a = v[i];
         int b = v[i + 1];
@@ -170,18 +231,24 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &v) {
         hasRest = true;
     }
 
-    // Main chain (larger elements)
+    // Step 2: Build main chain from larger elements (b_i)
     std::vector<int> mainChain;
     for (size_t i = 0; i < pairs.size(); i++)
         mainChain.push_back(pairs[i].second);
 
-    // Recursive sort
+    // Recursively sort main chain
     fordJohnsonVector(mainChain);
 
+    // Step 3: Insert smaller elements using Jacobsthal sequence
     jacobsthalInsertVector(mainChain, pairs, rest, hasRest);
 
     v = mainChain;
 }
+
+/*
+ * Binary insertion for deque version
+ */
+
 static void binaryInsertDeque(
     std::deque<int> &v,
     int value,
@@ -201,6 +268,11 @@ static void binaryInsertDeque(
     v.insert(left, value);
 }
 
+/*
+ * Jacobsthal insertion phase for deque container.
+ * Separate implementation required by subject.
+ */
+
 static void jacobsthalInsertDeque(
     std::deque<int> &mainChain,
     const std::deque< std::pair<int,int> > &pairs,
@@ -216,16 +288,29 @@ static void jacobsthalInsertDeque(
         int a = pairs[idx].first;
         int b = pairs[idx].second;
 
+        // Locate paired b_i inside sorted main chain
         std::deque<int>::iterator posB =
             std::lower_bound(mainChain.begin(), mainChain.end(), b);
 
         binaryInsertDeque(mainChain, a, posB);
     }
 
+    // Insert leftover element if original size was odd
     if (hasRest)
         binaryInsertDeque(mainChain, rest, mainChain.end());
 }
 
+/*
+ * Ford-Johnson (Merge-Insert) algorithm for std::deque.
+ *
+ * Algorithm structure:
+ * 1. Pair adjacent elements (a_i ≤ b_i)
+ * 2. Recursively sort larger elements (b_i)
+ * 3. Insert smaller elements (a_i) using Jacobsthal order
+ *
+ * This reduces the number of comparisons compared to
+ * classical merge sort in worst-case comparison count.
+ */
 void PmergeMe::fordJohnsonDeque(std::deque<int> &d) {
     if (d.size() <= 1)
         return;
@@ -234,7 +319,7 @@ void PmergeMe::fordJohnsonDeque(std::deque<int> &d) {
     int rest = 0;
     bool hasRest = false;
 
-    // Pairing
+    // Step 1: Pair adjacent elements and order internally
     for (size_t i = 0; i + 1 < d.size(); i += 2) {
         int a = d[i];
         int b = d[i + 1];
@@ -249,14 +334,15 @@ void PmergeMe::fordJohnsonDeque(std::deque<int> &d) {
         hasRest = true;
     }
 
-    // Main chain (larger elements)
+    // Step 2: Build main chain from larger elements (b_i)
     std::deque<int> mainChain;
     for (size_t i = 0; i < pairs.size(); i++)
         mainChain.push_back(pairs[i].second);
 
-    // Recursive sort
+    // Recursively sort main chain
     fordJohnsonDeque(mainChain);
 
+    // Step 3: Insert smaller elements using Jacobsthal sequence
     jacobsthalInsertDeque(mainChain, pairs, rest, hasRest);
 
     d = mainChain;
